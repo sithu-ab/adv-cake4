@@ -49,18 +49,26 @@ return function (RouteBuilder $routes): void {
      */
     $routes->setRouteClass(DashedRoute::class);
 
-    $routes->scope('/', function (RouteBuilder $builder): void {
-        /*
-         * Here, we are connecting '/' (base path) to a controller called 'Pages',
-         * its action called 'display', and we pass a param to select the view file
-         * to use (in this case, templates/Pages/home.php)...
+    /**
+     * Routes for "/"
+     */
+    $routes->scope('/', function (RouteBuilder $routes): void {
+        // We can't define like this
+        // $routes->prefix('App', function ($routes) {
+        //     $routes->connect('/', ['controller' => 'Home', 'action' => 'index']);
+        // });
+        $routes->connect('/', ['prefix' => 'App', 'controller' => 'Home', 'action' => 'index']);
+        /**
+         * Routes for "/admin"
          */
-        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+        $routes->scope('/admin', function (RouteBuilder $routes): void {
+            $routes->connect('/', ['prefix' => 'App/Admin', 'controller' => 'Home', 'action' => 'index']);
+        });
 
         /*
          * ...and connect the rest of 'Pages' controller's URLs.
          */
-        $builder->connect('/pages/*', 'Pages::display');
+        $routes->connect('/pages/*', 'Pages::display');
 
         /*
          * Connect catchall routes for all controllers.
@@ -75,7 +83,22 @@ return function (RouteBuilder $routes): void {
          * You can remove these routes once you've connected the
          * routes you want in your application.
          */
-        $builder->fallbacks();
+        $routes->fallbacks();
+    });
+
+    /**
+     * Routes for "/shop"
+     */
+    $routes->scope('/shop', function (RouteBuilder $routes): void {
+        $routes->connect('/', ['prefix' => 'AppShop', 'controller' => 'Home', 'action' => 'index']);
+        /**
+         * Routes for "/shop/admin"
+         */
+        $routes->scope('/admin', function (RouteBuilder $routes): void {
+            $routes->connect('/stocks', ['prefix' => 'AppShop/Admin', 'controller' => 'Stocks', 'action' => 'index']);
+        });
+
+        $routes->fallbacks();
     });
 
     /*
