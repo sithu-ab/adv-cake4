@@ -15,6 +15,6 @@ class StocksController extends AppController
 
     public function index()
     {
-        $this->set('title', 'Stock page');
+        $this->set('title', 'Auto-routed Stock page');
     }
 }

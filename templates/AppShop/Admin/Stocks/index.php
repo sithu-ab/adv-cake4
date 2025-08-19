@@ -1,1 +1,1 @@
-<h1>Shop Admin Stocks Page</h1>
+<h1>Auto-routed Shop Admin Stocks Page</h1>

@@ -49,71 +49,59 @@ return function (RouteBuilder $routes): void {
      */
     $routes->setRouteClass(DashedRoute::class);
 
-    /**
-     * Routes for "/"
-     */
+    /*************************************************/
+    /* Root -> App\Controller\App\*                  */
+    /*************************************************/
     $routes->scope('/', function (RouteBuilder $routes): void {
-        // We can't define like this
-        // $routes->prefix('App', function ($routes) {
-        //     $routes->connect('/', ['controller' => 'Home', 'action' => 'index']);
-        // });
+        // Home
         $routes->connect('/', ['prefix' => 'App', 'controller' => 'Home', 'action' => 'index']);
-        /**
-         * Routes for "/admin"
-         */
-        $routes->scope('/admin', function (RouteBuilder $routes): void {
-            $routes->connect('/', ['prefix' => 'App/Admin', 'controller' => 'Home', 'action' => 'index']);
-        });
 
-        /*
-         * ...and connect the rest of 'Pages' controller's URLs.
-         */
-        $routes->connect('/pages/*', 'Pages::display');
+        // You can define custom routes here if fallback auto-routing below is not working
 
-        /*
-         * Connect catchall routes for all controllers.
-         *
-         * The `fallbacks` method is a shortcut for
-         *
-         * ```
-         * $builder->connect('/{controller}', ['action' => 'index']);
-         * $builder->connect('/{controller}/{action}/*', []);
-         * ```
-         *
-         * You can remove these routes once you've connected the
-         * routes you want in your application.
-         */
-        $routes->fallbacks();
+        // Fallbacks (auto routing)
+        $routes->connect('/:controller', ['prefix' => 'App', 'action' => 'index']);
+        $routes->connect('/:controller/:action/*', ['prefix' => 'App']);
     });
 
-    /**
-     * Routes for "/shop"
-     */
+    /*************************************************/
+    /* Root -> App\Controller\App\Admin\*            */
+    /*************************************************/
+    $routes->scope('/admin', function (RouteBuilder $routes): void {
+        // Admin Home
+        $routes->connect('/', ['prefix' => 'App/Admin', 'controller' => 'Home', 'action' => 'index']);
+
+        // You can define custom routes here if the following fallback auto-routing is not working
+
+        // Fallbacks (auto routing)
+        $routes->connect('/:controller', ['prefix' => 'App/Admin', 'action' => 'index']);
+        $routes->connect('/:controller/:action/*', ['prefix' => 'App/Admin']);
+    });
+
+    /*************************************************/
+    /* /shop -> App\Controller\AppShop\*             */
+    /*************************************************/
     $routes->scope('/shop', function (RouteBuilder $routes): void {
+        // Shop home
         $routes->connect('/', ['prefix' => 'AppShop', 'controller' => 'Home', 'action' => 'index']);
-        /**
-         * Routes for "/shop/admin"
-         */
-        $routes->scope('/admin', function (RouteBuilder $routes): void {
-            $routes->connect('/stocks', ['prefix' => 'AppShop/Admin', 'controller' => 'Stocks', 'action' => 'index']);
-        });
 
-        $routes->fallbacks();
+        // You can define custom routes here if the following fallback auto-routing is not working
+
+        // Fallbacks (auto routing)
+        $routes->connect('/:controller', ['prefix' => 'AppShop', 'action' => 'index']);
+        $routes->connect('/:controller/:action/*', ['prefix' => 'AppShop']);
     });
 
-    /*
-     * If you need a different set of middleware or none at all,
-     * open new scope and define routes there.
-     *
-     * ```
-     * $routes->scope('/api', function (RouteBuilder $builder): void {
-     *     // No $builder->applyMiddleware() here.
-     *
-     *     // Parse specified extensions from URLs
-     *     // $builder->setExtensions(['json', 'xml']);
-     *
-     *     // Connect API actions here.
-     * });
-     * ```
-     */
+    /*************************************************/
+    /* /shop/admin -> App\Controller\AppShop\Admin\* */
+    /*************************************************/
+    $routes->scope('/shop/admin', function (RouteBuilder $routes): void {
+        // Shop Admin Home
+        $routes->connect('/', ['prefix' => 'AppShop/Admin', 'controller' => 'Home', 'action' => 'index']);
+
+        // You can define custom routes here if the following fallback auto-routing is not working
+
+        // Fallbacks (auto routing)
+        $routes->connect('/:controller', ['prefix' => 'AppShop/Admin', 'action' => 'index']);
+        $routes->connect('/:controller/:action/*', ['prefix' => 'AppShop/Admin']);
+    });
 };
